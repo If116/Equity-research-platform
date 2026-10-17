@@ -19,8 +19,7 @@ is the point: this is a platform, not a one-off script for one company. See
 metric means, how the code computes it, and how to explain it in an
 interview).
 
-**Interactive dashboards:** [NKE](https://claude.ai/artifact/YJhMnt3RLGhRLwGS8rL6DV) · [LULU](https://claude.ai/artifact/DBYdHojEwkn2N5U4YyebTv)
-
+   **Interactive dashboards:** [NKE](https://if116.github.io/Equity-research-platform/dashboards/NKE_dashboard.html) · [LULU](https://if116.github.io/Equity-research-platform/dashboards/LULU_dashboard.html)
 ## Project structure
 
 ```
