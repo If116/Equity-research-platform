@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" onerror="window.__chartPrimaryFailed=true"></script>
 <style>
   :root {
     --bg: #0b0e13; --panel: #12161e; --panel-2: #161b25; --border: #262d3a;
@@ -168,29 +168,69 @@ document.getElementById("kpiGrid").innerHTML = kpis.map(k =>
   `<div class="kpi"><div class="label">${k.label}</div><div class="value ${k.cls||''}">${k.value}</div></div>`
 ).join("");
 
+// ---------- Chart.js loading: resilient to one CDN being blocked ----------
+// Everything below this block (KPIs, comps table, DCF sliders, sensitivity
+// grid) does NOT depend on Chart.js and must keep working even if charts
+// never load -- a blocked/slow CDN should degrade gracefully, not take the
+// whole dashboard down with it.
+let revChart = null, fcfChart = null;
+
 function chartTextColor() { return getComputedStyle(document.documentElement).getPropertyValue('--text-dim').trim(); }
-Chart.defaults.font.family = "'IBM Plex Mono', monospace";
-Chart.defaults.font.size = 11;
 
-const revChart = new Chart(document.getElementById('revenueChart'), {
-  data: { labels: DATA.years, datasets: [
-    {type:'bar', label:'Revenue ($M)', data: DATA.revenue, backgroundColor:'#38bdf8', yAxisID:'y', borderRadius:2},
-    {type:'line', label:'EBIT margin (%)', data: DATA.ebitMargin, borderColor:'#f97316', backgroundColor:'#f97316', yAxisID:'y1', tension:0.3, pointRadius:3},
-  ]},
-  options: { responsive:true, maintainAspectRatio:false,
-    plugins:{ legend:{labels:{color: chartTextColor()}}, title:{display:true, text:'Revenue & EBIT Margin', color: chartTextColor()} },
-    scales: { y:{position:'left', ticks:{color:chartTextColor()}, grid:{color:'rgba(128,128,128,0.15)'}},
-              y1:{position:'right', ticks:{color:chartTextColor()}, grid:{drawOnChartArea:false}},
-              x:{ticks:{color:chartTextColor()}, grid:{display:false}} } }
-});
-const fcfChart = new Chart(document.getElementById('fcfChart'), {
-  type:'bar',
-  data: { labels: DATA.years, datasets:[{label:'FCF ($M)', data: DATA.fcf, backgroundColor:'#34d399', borderRadius:2}] },
-  options: { responsive:true, maintainAspectRatio:false,
-    plugins:{ legend:{display:false}, title:{display:true, text:'Free Cash Flow', color: chartTextColor()} },
-    scales: { y:{ticks:{color:chartTextColor()}, grid:{color:'rgba(128,128,128,0.15)'}}, x:{ticks:{color:chartTextColor()}, grid:{display:false}} } }
-});
+function showChartError(canvasId, message) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const msg = document.createElement('div');
+  msg.style.cssText = 'display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-dim);font-size:12px;text-align:center;padding:12px;';
+  msg.textContent = message;
+  canvas.replaceWith(msg);
+}
 
+function buildCharts() {
+  try {
+    Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+    Chart.defaults.font.size = 11;
+
+    revChart = new Chart(document.getElementById('revenueChart'), {
+      data: { labels: DATA.years, datasets: [
+        {type:'bar', label:'Revenue ($M)', data: DATA.revenue, backgroundColor:'#38bdf8', yAxisID:'y', borderRadius:2},
+        {type:'line', label:'EBIT margin (%)', data: DATA.ebitMargin, borderColor:'#f97316', backgroundColor:'#f97316', yAxisID:'y1', tension:0.3, pointRadius:3},
+      ]},
+      options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{labels:{color: chartTextColor()}}, title:{display:true, text:'Revenue & EBIT Margin', color: chartTextColor()} },
+        scales: { y:{position:'left', ticks:{color:chartTextColor()}, grid:{color:'rgba(128,128,128,0.15)'}},
+                  y1:{position:'right', ticks:{color:chartTextColor()}, grid:{drawOnChartArea:false}},
+                  x:{ticks:{color:chartTextColor()}, grid:{display:false}} } }
+    });
+    fcfChart = new Chart(document.getElementById('fcfChart'), {
+      type:'bar',
+      data: { labels: DATA.years, datasets:[{label:'FCF ($M)', data: DATA.fcf, backgroundColor:'#34d399', borderRadius:2}] },
+      options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{display:false}, title:{display:true, text:'Free Cash Flow', color: chartTextColor()} },
+        scales: { y:{ticks:{color:chartTextColor()}, grid:{color:'rgba(128,128,128,0.15)'}}, x:{ticks:{color:chartTextColor()}, grid:{display:false}} } }
+    });
+  } catch (err) {
+    console.error('Chart.js failed to render charts:', err);
+    showChartError('revenueChart', 'Chart could not render (Chart.js error) -- the rest of the dashboard is unaffected.');
+    showChartError('fcfChart', 'Chart could not render (Chart.js error) -- the rest of the dashboard is unaffected.');
+  }
+}
+
+if (typeof Chart !== 'undefined' && !window.__chartPrimaryFailed) {
+  buildCharts();
+} else {
+  // Primary CDN (jsDelivr) didn't load -- try a second CDN before giving up.
+  const fallback = document.createElement('script');
+  fallback.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js';
+  fallback.onload = buildCharts;
+  fallback.onerror = () => {
+    showChartError('revenueChart', 'Charts unavailable (both CDN sources blocked) -- the rest of the dashboard still works below.');
+    showChartError('fcfChart', 'Charts unavailable (both CDN sources blocked) -- the rest of the dashboard still works below.');
+  };
+  document.head.appendChild(fallback);
+}
+
+// ---------- Everything below runs immediately and independently of Chart.js ----------
 function fmtMoney(v){ return v==null ? "n/a" : `$${v.toLocaleString()}`; }
 function fmtX(v){ return v==null ? "n/a" : `${v.toFixed(1)}x`; }
 const compsHead = `<tr><th>Ticker</th><th>Mkt Cap ($M)</th><th>Revenue ($M)</th><th>P/E</th><th>EV/EBITDA</th></tr>`;
@@ -260,6 +300,7 @@ themeBtn.addEventListener('click', () => {
   const next = current === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   [revChart, fcfChart].forEach(c => {
+    if (!c) return;  // charts may never have loaded -- theme toggle still works for the rest of the page
     c.options.plugins.legend.labels.color = chartTextColor();
     if (c.options.plugins.title) c.options.plugins.title.color = chartTextColor();
     Object.values(c.options.scales).forEach(s => { if (s.ticks) s.ticks.color = chartTextColor(); });
