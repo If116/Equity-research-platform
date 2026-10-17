@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NKE — Equity Research Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0b0e13; --panel: #12161e; --panel-2: #161b25; --border: #262d3a;
+    --text: #e7eaf0; --text-dim: #8b93a5; --accent: #f97316; --accent-dim: #c2570f;
+    --blue: #38bdf8; --green: #34d399; --red: #f87171;
+    --mono: 'IBM Plex Mono', monospace; --sans: 'Space Grotesk', sans-serif; --radius: 3px;
+  }
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #f5f6f8; --panel: #ffffff; --panel-2: #f0f1f4; --border: #d9dce2;
+      --text: #12161e; --text-dim: #565f70;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f5f6f8; --panel: #ffffff; --panel-2: #f0f1f4; --border: #d9dce2;
+    --text: #12161e; --text-dim: #565f70;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html, body {
+    height: 100%; margin: 0; background: var(--bg); color: var(--text);
+    font-family: var(--sans); padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  body { -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+  header.top {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    flex-wrap: wrap; gap: 14px; border-bottom: 1px solid var(--border);
+    padding-bottom: 18px; margin-bottom: 26px;
+  }
+  .id-block { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .ticker { font-size: 13px; letter-spacing: 0.08em; color: var(--accent); font-family: var(--mono); }
+  h1 { font-size: 26px; margin: 2px 0 0; font-weight: 600; }
+  .price-block { text-align: right; }
+  .price { font-family: var(--mono); font-size: 30px; font-weight: 500; }
+  .asof { color: var(--text-dim); font-size: 12px; margin-top: 2px; }
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px; background: var(--border); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 30px;
+  }
+  .kpi { background: var(--panel); padding: 16px 16px; }
+  .kpi .label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; }
+  .kpi .value { font-family: var(--mono); font-size: 20px; margin-top: 6px; }
+  .kpi .value.up { color: var(--green); }
+  .kpi .value.down { color: var(--red); }
+  section { margin-bottom: 34px; }
+  .section-title {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text-dim); margin-bottom: 12px; font-family: var(--mono);
+  }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+  .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .chart-row { grid-template-columns: 1fr; } }
+  .chart-box { height: 260px; }
+  table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13px; }
+  th, td { text-align: right; padding: 9px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--text-dim); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+  tr.highlight td { color: var(--accent); font-weight: 600; }
+  .scroll-x { overflow-x: auto; }
+  .dcf-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 18px; }
+  @media (max-width: 720px) { .dcf-controls { grid-template-columns: 1fr; } }
+  .slider-block label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
+  .slider-block .val { font-family: var(--mono); color: var(--accent); }
+  input[type=range] { width: 100%; accent-color: var(--accent); background: transparent; }
+  .dcf-result-row { display: flex; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .dcf-result-row > div { flex: 1; background: var(--panel); padding: 14px 16px; }
+  .dcf-result-row .big { font-family: var(--mono); font-size: 22px; margin-top: 4px; }
+  .heat-cell { border-radius: 2px; padding: 2px 4px; }
+  footer { color: var(--text-dim); font-size: 11px; line-height: 1.6; border-top: 1px solid var(--border); padding-top: 16px; margin-top: 10px; }
+  .theme-toggle {
+    position: fixed; top: calc(16px + env(safe-area-inset-top, 0px)); right: 16px;
+    background: var(--panel); border: 1px solid var(--border); color: var(--text-dim);
+    font-family: var(--mono); font-size: 11px; padding: 6px 10px; border-radius: var(--radius); cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<button class="theme-toggle" id="themeToggle">theme</button>
+<div class="wrap">
+  <header class="top">
+    <div class="id-block">
+      <div>
+        <div class="ticker">NKE</div>
+        <h1>NIKE, Inc. — Equity Research Dashboard</h1>
+      </div>
+    </div>
+    <div class="price-block">
+      <div class="price" id="currentPriceLabel">$35.75</div>
+      <div class="asof">as of 2026-09-28 · built on FY2025 data</div>
+    </div>
+  </header>
+
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <section>
+    <div class="section-title">Financial Trend — FY2023–FY2025</div>
+    <div class="panel chart-row">
+      <div class="chart-box"><canvas id="revenueChart"></canvas></div>
+      <div class="chart-box"><canvas id="fcfChart"></canvas></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">Comparable Company Analysis</div>
+    <div class="panel scroll-x"><table id="compsTable"></table></div>
+  </section>
+
+  <section>
+    <div class="section-title">DCF Valuation — Interactive</div>
+    <div class="panel">
+      <div class="dcf-controls">
+        <div class="slider-block">
+          <label>WACC <span class="val" id="waccVal">8.74%</span></label>
+          <input type="range" id="waccSlider" min="6" max="13" step="0.1" value="8.74">
+        </div>
+        <div class="slider-block">
+          <label>Terminal growth <span class="val" id="growthVal">2.5%</span></label>
+          <input type="range" id="growthSlider" min="1" max="4" step="0.1" value="2.5">
+        </div>
+      </div>
+      <div class="dcf-result-row">
+        <div><div class="section-title" style="margin-bottom:4px;">Implied share price</div><div class="big" id="dcfImplied">—</div></div>
+        <div><div class="section-title" style="margin-bottom:4px;">vs. current price</div><div class="big" id="dcfDelta">—</div></div>
+        <div><div class="section-title" style="margin-bottom:4px;">Implied enterprise value</div><div class="big" id="dcfEV">—</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">Sensitivity — Implied Price (WACC × Terminal Growth)</div>
+    <div class="panel scroll-x"><table id="sensTable"></table></div>
+  </section>
+
+  <footer>
+    Built as an independent educational/portfolio project. Sources: NIKE FY2025 Form 10-K (SEC EDGAR, filed 2025-07-17); NIKE FY2025 Q3/Q4 earnings releases; NIKE Q1 FY2026 earnings release (filed 2025-09-30); Market data aggregators (Investing.com, Morningstar, Google Finance) as of ~2026-09-25. Not investment research —
+    all assumptions (WACC build-up, FCF growth path, terminal growth) are adjustable above and documented in the
+    accompanying Python source (valuation.py, comps.py, financials.py). This dashboard is generated by
+    dashboard_builder.py from data/output_NKE.json -- it is not hand-written per company.
+  </footer>
+</div>
+
+<script>
+const DATA = {"currentPrice": 35.75, "shares": 1479, "totalDebt": 10516, "cash": 7464, "baseFCF": 3268, "growthPath": [0.03, 0.05, 0.06, 0.06, 0.05], "years": ["FY2023", "FY2024", "FY2025"], "revenue": [51217, 51362, 46309], "ebitMargin": [12.1, 12.7, 8.2], "fcf": [4872, 6617, 3268], "roic": 18.1, "netDebtToEbitda": 0.3, "comps": [{"t": "LULU", "n": "Lululemon Athletica Inc.", "mc": 14000, "rev": 11200, "pe": 10.1, "ev": 5.9, "highlight": false}, {"t": "ADS.DE", "n": "Adidas AG", "mc": 30300, "rev": 29000, "pe": null, "ev": 9.4, "highlight": false}, {"t": "DECK", "n": "Deckers Brands", "mc": 14560, "rev": 5472, "pe": null, "ev": null, "highlight": false}, {"t": "ONON", "n": "On Holding AG", "mc": 9300, "rev": null, "pe": 22.0, "ev": null, "highlight": false}, {"t": "NKE", "n": "NIKE, Inc.  (subject company)", "mc": 53040, "rev": 46309, "pe": 17.02, "ev": 12.32, "highlight": true}], "impliedCompsEvEbitda": 21.486443542934417, "impliedCompsPe": 33.705000000000005, "dcfImplied": 38.253350125558484, "latestFy": "FY2025"};
+
+const kpis = [
+  {label:"Current price", value:`$${DATA.currentPrice.toFixed(2)}`},
+  {label:"DCF implied price", value:`$${DATA.dcfImplied.toFixed(2)}`, cls: DATA.dcfImplied >= DATA.currentPrice ? "up" : "down"},
+  {label:"Comps EV/EBITDA implied", value: DATA.impliedCompsEvEbitda ? `$${DATA.impliedCompsEvEbitda.toFixed(2)}` : "n/a", cls: DATA.impliedCompsEvEbitda && DATA.impliedCompsEvEbitda < DATA.currentPrice ? "down" : "up"},
+  {label:"Comps P/E implied", value: DATA.impliedCompsPe ? `$${DATA.impliedCompsPe.toFixed(2)}` : "n/a"},
+  {label:`ROIC (${DATA.latestFy})`, value:`${DATA.roic.toFixed(1)}%`},
+  {label:"Net Debt / EBITDA", value:`${DATA.netDebtToEbitda.toFixed(2)}x`},
+];
+document.getElementById("kpiGrid").innerHTML = kpis.map(k =>
+  `<div class="kpi"><div class="label">${k.label}</div><div class="value ${k.cls||''}">${k.value}</div></div>`
+).join("");
+
+function chartTextColor() { return getComputedStyle(document.documentElement).getPropertyValue('--text-dim').trim(); }
+Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+Chart.defaults.font.size = 11;
+
+const revChart = new Chart(document.getElementById('revenueChart'), {
+  data: { labels: DATA.years, datasets: [
+    {type:'bar', label:'Revenue ($M)', data: DATA.revenue, backgroundColor:'#38bdf8', yAxisID:'y', borderRadius:2},
+    {type:'line', label:'EBIT margin (%)', data: DATA.ebitMargin, borderColor:'#f97316', backgroundColor:'#f97316', yAxisID:'y1', tension:0.3, pointRadius:3},
+  ]},
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{labels:{color: chartTextColor()}}, title:{display:true, text:'Revenue & EBIT Margin', color: chartTextColor()} },
+    scales: { y:{position:'left', ticks:{color:chartTextColor()}, grid:{color:'rgba(128,128,128,0.15)'}},
+              y1:{position:'right', ticks:{color:chartTextColor()}, grid:{drawOnChartArea:false}},
+              x:{ticks:{color:chartTextColor()}, grid:{display:false}} } }
+});
+const fcfChart = new Chart(document.getElementById('fcfChart'), {
+  type:'bar',
+  data: { labels: DATA.years, datasets:[{label:'FCF ($M)', data: DATA.fcf, backgroundColor:'#34d399', borderRadius:2}] },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, title:{display:true, text:'Free Cash Flow', color: chartTextColor()} },
+    scales: { y:{ticks:{color:chartTextColor()}, grid:{color:'rgba(128,128,128,0.15)'}}, x:{ticks:{color:chartTextColor()}, grid:{display:false}} } }
+});
+
+function fmtMoney(v){ return v==null ? "n/a" : `$${v.toLocaleString()}`; }
+function fmtX(v){ return v==null ? "n/a" : `${v.toFixed(1)}x`; }
+const compsHead = `<tr><th>Ticker</th><th>Mkt Cap ($M)</th><th>Revenue ($M)</th><th>P/E</th><th>EV/EBITDA</th></tr>`;
+const compsRows = DATA.comps.map(c => `<tr ${c.highlight?'class="highlight"':''}><td>${c.t}</td><td>${fmtMoney(c.mc)}</td><td>${fmtMoney(c.rev)}</td><td>${fmtX(c.pe)}</td><td>${fmtX(c.ev)}</td></tr>`).join("");
+document.getElementById("compsTable").innerHTML = compsHead + compsRows;
+
+function dcfPrice(waccPct, gPct) {
+  const wacc = waccPct/100, g = gPct/100;
+  if (wacc <= g) return null;
+  let fcf = DATA.baseFCF;
+  const fcfs = DATA.growthPath.map(gr => { fcf = fcf*(1+gr); return fcf; });
+  const pv = fcfs.map((f,i) => f/Math.pow(1+wacc, i+1));
+  const tv = fcfs[fcfs.length-1]*(1+g)/(wacc-g);
+  const pvTv = tv/Math.pow(1+wacc, fcfs.length);
+  const ev = pv.reduce((a,b)=>a+b,0) + pvTv;
+  const equity = ev - DATA.totalDebt + DATA.cash;
+  return { price: equity/DATA.shares, ev };
+}
+
+function updateDcf() {
+  const wacc = parseFloat(document.getElementById('waccSlider').value);
+  const g = parseFloat(document.getElementById('growthSlider').value);
+  document.getElementById('waccVal').textContent = wacc.toFixed(2)+'%';
+  document.getElementById('growthVal').textContent = g.toFixed(1)+'%';
+  const result = dcfPrice(wacc, g);
+  if (!result) {
+    document.getElementById('dcfImplied').textContent = 'n/a (WACC ≤ g)';
+    document.getElementById('dcfDelta').textContent = '—';
+    document.getElementById('dcfEV').textContent = '—';
+    return;
+  }
+  document.getElementById('dcfImplied').textContent = `$${result.price.toFixed(2)}`;
+  const delta = (result.price/DATA.currentPrice - 1)*100;
+  const deltaEl = document.getElementById('dcfDelta');
+  deltaEl.textContent = `${delta>=0?'+':''}${delta.toFixed(1)}%`;
+  deltaEl.style.color = delta>=0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('dcfEV').textContent = `$${Math.round(result.ev).toLocaleString()}M`;
+  renderSensitivity(wacc);
+}
+document.getElementById('waccSlider').addEventListener('input', updateDcf);
+document.getElementById('growthSlider').addEventListener('input', updateDcf);
+
+function renderSensitivity(centerWacc) {
+  const waccRows = [-1, -0.5, 0, 0.5, 1].map(d => +(centerWacc + d).toFixed(2));
+  const gCols = [1.5, 2.0, 2.5, 3.0, 3.5];
+  let html = '<tr><th>WACC \\ g</th>' + gCols.map(g=>`<th>${g.toFixed(1)}%</th>`).join('') + '</tr>';
+  waccRows.forEach(w => {
+    html += `<tr><th>${w.toFixed(2)}%</th>`;
+    gCols.forEach(g => {
+      const r = dcfPrice(w, g);
+      if (!r) { html += `<td>n/a</td>`; return; }
+      const diff = r.price/DATA.currentPrice - 1;
+      const intensity = Math.min(Math.abs(diff)*3, 0.55);
+      const color = diff >= 0 ? `rgba(52,211,153,${intensity})` : `rgba(248,113,113,${intensity})`;
+      html += `<td><span class="heat-cell" style="background:${color}">$${r.price.toFixed(2)}</span></td>`;
+    });
+    html += '</tr>';
+  });
+  document.getElementById('sensTable').innerHTML = html;
+}
+
+updateDcf();
+
+const themeBtn = document.getElementById('themeToggle');
+themeBtn.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  [revChart, fcfChart].forEach(c => {
+    c.options.plugins.legend.labels.color = chartTextColor();
+    if (c.options.plugins.title) c.options.plugins.title.color = chartTextColor();
+    Object.values(c.options.scales).forEach(s => { if (s.ticks) s.ticks.color = chartTextColor(); });
+    c.update();
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+{
+  "company": "NIKE, Inc.",
+  "ticker": "NKE",
+  "fiscal_year_end": "May 31",
+  "as_of_date": "2026-09-28",
+  "currency": "USD millions (except per-share and price data)",
+  "sources": [
+    "NIKE FY2025 Form 10-K (SEC EDGAR, filed 2025-07-17)",
+    "NIKE FY2025 Q3/Q4 earnings releases",
+    "NIKE Q1 FY2026 earnings release (filed 2025-09-30)",
+    "Market data aggregators (Investing.com, Morningstar, Google Finance) as of ~2026-09-25"
+  ],
+  "latest_fiscal_year": "FY2025",
+  "peers": ["LULU", "ADS.DE", "DECK", "ONON"],
+  "income_statement": {
+    "FY2023": {"revenue": 51217, "ebit": 6195, "ebit_margin": 0.121, "net_income": 5070},
+    "FY2024": {"revenue": 51362, "ebit": 6539, "ebit_margin": 0.127, "net_income": 5700},
+    "FY2025": {"revenue": 46309, "ebit": 3778, "ebit_margin": 0.082, "net_income": 3219, "diluted_eps": 2.16}
+  },
+  "cash_flow": {
+    "FY2023": {"cfo": 5841, "capex": -969, "d_and_a": 703, "fcf": 4872},
+    "FY2024": {"cfo": 7429, "capex": -812, "d_and_a": 796, "fcf": 6617},
+    "FY2025": {"cfo": 3698, "capex": -430, "d_and_a": 775, "fcf": 3268}
+  },
+  "balance_sheet_latest": {
+    "cash_and_equivalents": 7464,
+    "short_term_investments": 1687,
+    "total_current_assets": 23362,
+    "pp_and_e_net": 4828,
+    "total_assets": 36579,
+    "total_current_liabilities": 10566,
+    "long_term_debt": 7961,
+    "operating_lease_liabilities": 2550,
+    "notes_payable": 5,
+    "total_debt": 10516,
+    "deferred_taxes_and_other_liabilities": 2289
+  },
+  "latest_quarter_Q1_FY2026": {
+    "period_end": "2025-08-31",
+    "revenue": 11720,
+    "gross_margin": 0.422,
+    "net_income": 727,
+    "diluted_eps": 0.49
+  },
+  "dcf_assumptions": {
+    "note": "Post-trough recovery thesis: FY2025 was a trough year (Win Now reset); this models a gradual margin/FCF recovery over 5 years rather than extrapolating the FY2025 decline forward.",
+    "risk_free_rate": 0.042,
+    "equity_risk_premium": 0.05,
+    "pre_tax_cost_of_debt": 0.05,
+    "tax_rate": 0.22,
+    "terminal_growth": 0.025,
+    "growth_path": [0.03, 0.05, 0.06, 0.06, 0.05]
+  },
+  "market_data": {
+    "as_of": "2026-09-25",
+    "share_price": 35.75,
+    "market_cap": 53040,
+    "diluted_shares_outstanding": 1479,
+    "ttm_eps": 2.10,
+    "ttm_pe": 17.02,
+    "52wk_low": 35.22,
+    "52wk_high": 76.97,
+    "beta": 1.10
+  }
+}

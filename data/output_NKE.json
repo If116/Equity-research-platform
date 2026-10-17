@@ -1,0 +1,193 @@
+{
+  "company": "NIKE, Inc.",
+  "ticker": "NKE",
+  "as_of_date": "2026-09-28",
+  "current_price": 35.75,
+  "peers": [
+    "LULU",
+    "ADS.DE",
+    "DECK",
+    "ONON"
+  ],
+  "dcf_note": "Post-trough recovery thesis: FY2025 was a trough year (Win Now reset); this models a gradual margin/FCF recovery over 5 years rather than extrapolating the FY2025 decline forward.",
+  "financial_summary": [
+    {
+      "fiscal_year": "FY2023",
+      "revenue": 51217,
+      "revenue_growth": null,
+      "ebit": 6195,
+      "ebit_margin": 0.121,
+      "ebitda": 6898,
+      "ebitda_margin": 0.13468184391901128,
+      "net_income": 5070,
+      "net_income_margin": 0.09899056953745826,
+      "fcf": 4872,
+      "fcf_margin": 0.09512466563836226
+    },
+    {
+      "fiscal_year": "FY2024",
+      "revenue": 51362,
+      "revenue_growth": 0.0028310912392369722,
+      "ebit": 6539,
+      "ebit_margin": 0.127,
+      "ebitda": 7335,
+      "ebitda_margin": 0.14280985942914995,
+      "net_income": 5700,
+      "net_income_margin": 0.11097698687745804,
+      "fcf": 6617,
+      "fcf_margin": 0.12883065301195437
+    },
+    {
+      "fiscal_year": "FY2025",
+      "revenue": 46309,
+      "revenue_growth": -0.09838012538452552,
+      "ebit": 3778,
+      "ebit_margin": 0.082,
+      "ebitda": 4553,
+      "ebitda_margin": 0.09831782158975577,
+      "net_income": 3219,
+      "net_income_margin": 0.06951132609212032,
+      "fcf": 3268,
+      "fcf_margin": 0.07056943574683107
+    }
+  ],
+  "roic": 0.18117675991392562,
+  "leverage": {
+    "net_debt": 1365,
+    "net_debt_to_ebitda": 0.2998023281352954,
+    "total_debt_to_ebitda": 2.3096859213705248
+  },
+  "peer_avg_multiples": {
+    "avg_ev_ebitda": 7.65,
+    "avg_pe": 16.05
+  },
+  "target_multiples": {
+    "pe": 17.02,
+    "ev_ebitda": 12.319789150010982,
+    "enterprise_value": 56092
+  },
+  "comps_table": [
+    {
+      "ticker": "LULU",
+      "name": "Lululemon Athletica Inc.",
+      "market_cap": 14000,
+      "revenue": 11200,
+      "pe": 10.1,
+      "ev_ebitda": 5.9
+    },
+    {
+      "ticker": "ADS.DE",
+      "name": "Adidas AG",
+      "market_cap": 30300,
+      "revenue": 29000,
+      "pe": null,
+      "ev_ebitda": 9.4
+    },
+    {
+      "ticker": "DECK",
+      "name": "Deckers Brands",
+      "market_cap": 14560,
+      "revenue": 5472,
+      "pe": null,
+      "ev_ebitda": null
+    },
+    {
+      "ticker": "ONON",
+      "name": "On Holding AG",
+      "market_cap": 9300,
+      "revenue": null,
+      "pe": 22.0,
+      "ev_ebitda": null
+    },
+    {
+      "ticker": "NKE",
+      "name": "NIKE, Inc.  (subject company)",
+      "market_cap": 53040,
+      "revenue": 46309,
+      "pe": 17.02,
+      "ev_ebitda": 12.32
+    }
+  ],
+  "implied_valuation_comps": {
+    "peer_avg_ev_ebitda": 7.65,
+    "peer_avg_pe": 16.05,
+    "implied_ev_from_ebitda_multiple": 34830.450000000004,
+    "implied_share_price_ev_ebitda": 21.486443542934417,
+    "implied_share_price_pe": 33.705000000000005,
+    "current_share_price": 35.75
+  },
+  "wacc_buildup": {
+    "wacc": 0.08740329787903581,
+    "cost_of_equity": 0.097,
+    "cost_of_debt_after_tax": 0.03900000000000001,
+    "weight_equity": 0.8345396186040657,
+    "weight_debt": 0.1654603813959343
+  },
+  "dcf_result": {
+    "wacc_used": 0.08740329787903581,
+    "terminal_growth_used": 0.025,
+    "growth_path_used": [
+      0.03,
+      0.05,
+      0.06,
+      0.06,
+      0.05
+    ],
+    "projected_fcfs": [
+      3366.04,
+      3534.342,
+      3746.40252,
+      3971.1866712,
+      4169.746004760001
+    ],
+    "pv_fcfs": [
+      3095.484450493586,
+      2989.0093945437234,
+      2913.684338088883,
+      2840.2575239548205,
+      2742.5614819905704
+    ],
+    "terminal_value": 68489.80422739539,
+    "pv_terminal_value": 45047.70764662942,
+    "enterprise_value": 59628.704835701,
+    "equity_value": 56576.704835701,
+    "implied_share_price": 38.253350125558484
+  },
+  "sensitivity_grid": {
+    "7.74%": {
+      "1.5%": 39.66,
+      "2.0%": 42.58,
+      "2.5%": 46.06,
+      "3.0%": 50.27,
+      "3.5%": 55.47
+    },
+    "8.24%": {
+      "1.5%": 36.51,
+      "2.0%": 38.95,
+      "2.5%": 41.82,
+      "3.0%": 45.23,
+      "3.5%": 49.36
+    },
+    "8.74%": {
+      "1.5%": 33.79,
+      "2.0%": 35.86,
+      "2.5%": 38.26,
+      "3.0%": 41.07,
+      "3.5%": 44.42
+    },
+    "9.24%": {
+      "1.5%": 31.43,
+      "2.0%": 33.2,
+      "2.5%": 35.22,
+      "3.0%": 37.58,
+      "3.5%": 40.34
+    },
+    "9.74%": {
+      "1.5%": 29.35,
+      "2.0%": 30.88,
+      "2.5%": 32.61,
+      "3.0%": 34.6,
+      "3.5%": 36.92
+    }
+  }
+}

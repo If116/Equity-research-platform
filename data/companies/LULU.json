@@ -1,0 +1,59 @@
+{
+  "company": "lululemon athletica inc.",
+  "ticker": "LULU",
+  "fiscal_year_end": "~January/early February (retail fiscal calendar)",
+  "as_of_date": "2026-09-25",
+  "currency": "USD millions (except per-share and price data)",
+  "sources": [
+    "LULU Form 10-K for fiscal 2025 (year ended 2026-02-01), filed ~March 2026",
+    "LULU Q4/FY2025 earnings release (2026-03-17)",
+    "LULU 10-Q filings (fiscal 2025 and Q1 FY2026)",
+    "Market data aggregators (stockanalysis.com, GuruFocus, stock-analysis-on.net) as of ~Sept 2026"
+  ],
+  "notes": "Revenue, EBIT, net income, EPS, and all balance-sheet figures are directly sourced and cross-checked (total assets - total equity = total liabilities reconciles exactly). D&A is directly sourced for FY2023-FY2024 (10-K Note 5); FY2025 D&A is extrapolated. Full-year capex and CFO are NOT separately disclosed in the sources pulled here, so they are modeled as CFO = Net Income + D&A (ignoring working capital changes) and capex is estimated from disclosed quarterly run-rates and MD&A commentary. This is flagged so it isn't mistaken for a directly-sourced figure -- swap in the real 10-K cash flow statement lines if you want full precision.",
+  "latest_fiscal_year": "FY2025",
+  "peers": ["NKE", "DECK", "ONON", "ADS.DE"],
+  "income_statement": {
+    "FY2023": {"revenue": 9619, "ebit": 2206, "ebit_margin": 0.229, "net_income": 1550, "diluted_eps": 12.20},
+    "FY2024": {"revenue": 10588, "ebit": 2505, "ebit_margin": 0.2366, "net_income": 1809, "diluted_eps": 14.64},
+    "FY2025": {"revenue": 11090, "ebit": 2207, "ebit_margin": 0.199, "net_income": 1577, "diluted_eps": 13.26}
+  },
+  "cash_flow": {
+    "FY2023": {"cfo": 1924, "capex": -550, "d_and_a": 374, "fcf": 1374, "estimated": true},
+    "FY2024": {"cfo": 2252, "capex": -700, "d_and_a": 443, "fcf": 1552, "estimated": true},
+    "FY2025": {"cfo": 2057, "capex": -600, "d_and_a": 480, "fcf": 1457, "estimated": true}
+  },
+  "balance_sheet_latest": {
+    "cash_and_equivalents": 1807,
+    "short_term_investments": 0,
+    "total_current_assets": 4263,
+    "pp_and_e_net": 2034,
+    "total_assets": 8457,
+    "total_current_liabilities": 1888,
+    "long_term_debt": 0,
+    "operating_lease_liabilities": 1500,
+    "notes_payable": 0,
+    "total_debt": 0,
+    "deferred_taxes_and_other_liabilities": 107
+  },
+  "dcf_assumptions": {
+    "note": "Guidance-reset thesis: LULU cut FY2026 revenue guidance materially (from +2-4% to -5% to -7%) between its FY2025 year-end report and later FY2026 quarters, and the stock is down roughly 49% from its all-time high. This models a near-term revenue/FCF contraction before stabilizing, rather than reusing a generic growth assumption -- swap in your own view of the turnaround timeline.",
+    "risk_free_rate": 0.042,
+    "equity_risk_premium": 0.05,
+    "pre_tax_cost_of_debt": 0.045,
+    "tax_rate": 0.295,
+    "terminal_growth": 0.025,
+    "growth_path": [-0.05, 0.0, 0.02, 0.03, 0.03]
+  },
+  "market_data": {
+    "as_of": "2026-09-25",
+    "share_price": 123.30,
+    "market_cap": 14000,
+    "diluted_shares_outstanding": 113.55,
+    "ttm_eps": 12.15,
+    "ttm_pe": 10.1,
+    "52wk_low": null,
+    "52wk_high": null,
+    "beta": 0.86
+  }
+}

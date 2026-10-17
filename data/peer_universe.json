@@ -1,0 +1,58 @@
+{
+  "as_of_date": "2026-09-25",
+  "note": "Universe of company profiles that any target company (data/companies/*.json) can reference by ticker in its own \"peers\" list. Figures are approximate, compiled from public market-data aggregators; for illustrative comps analysis, not investment use.",
+  "companies": [
+    {
+      "ticker": "NKE",
+      "name": "NIKE, Inc.",
+      "market_cap": 53040,
+      "ttm_revenue": 46309,
+      "gross_margin": 0.427,
+      "ebitda_margin": 0.0983,
+      "pe_ratio": 17.02,
+      "ev_ebitda": 12.32
+    },
+    {
+      "ticker": "LULU",
+      "name": "Lululemon Athletica Inc.",
+      "market_cap": 14000,
+      "ttm_revenue": 11200,
+      "gross_margin": 0.57,
+      "ebitda_margin": 0.25,
+      "pe_ratio": 10.1,
+      "ev_ebitda": 5.9
+    },
+    {
+      "ticker": "ADS.DE",
+      "name": "Adidas AG",
+      "market_cap": 30300,
+      "ttm_revenue": 29000,
+      "gross_margin": 0.48,
+      "ebitda_margin": null,
+      "pe_ratio": null,
+      "ev_ebitda": 9.4
+    },
+    {
+      "ticker": "DECK",
+      "name": "Deckers Brands",
+      "market_cap": 14560,
+      "ttm_revenue": 5472,
+      "gross_margin": null,
+      "ebitda_margin": null,
+      "pe_ratio": null,
+      "ev_ebitda": null,
+      "revenue_growth": 0.098
+    },
+    {
+      "ticker": "ONON",
+      "name": "On Holding AG",
+      "market_cap": 9300,
+      "ttm_revenue": null,
+      "gross_margin": null,
+      "ebitda_margin": null,
+      "pe_ratio": 22.0,
+      "ev_ebitda": null,
+      "revenue_growth": 0.2
+    }
+  ]
+}

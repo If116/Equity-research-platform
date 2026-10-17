@@ -1,0 +1,68 @@
+{
+  "_how_to_use_this_template": [
+    "1. Copy this file to <TICKER>.json (e.g. AAPL.json) in this same folder.",
+    "2. Delete every key that starts with an underscore -- they are instructions, not data.",
+    "3. Fill in every value marked PLACEHOLDER using the source hints next to it.",
+    "4. Add any new peers to ../peer_universe.json if they aren't already there.",
+    "5. Run: python3 analysis.py <TICKER> && python3 generate_report.py <TICKER>"
+  ],
+  "company": "PLACEHOLDER -- full legal company name, e.g. 'Apple Inc.'",
+  "ticker": "PLACEHOLDER -- e.g. 'AAPL'",
+  "fiscal_year_end": "PLACEHOLDER -- e.g. 'September' or 'December 31' -- check the 10-K cover page",
+  "as_of_date": "PLACEHOLDER -- today's date, YYYY-MM-DD -- this is when you pulled market_data below",
+  "currency": "USD millions (except per-share and price data)",
+  "sources": [
+    "PLACEHOLDER -- list the exact filings/pages you pulled from, e.g. 'AAPL FY2025 Form 10-K (SEC EDGAR)'"
+  ],
+  "notes": "PLACEHOLDER -- flag anything estimated/approximated rather than directly sourced. Be honest here; it protects you in an interview.",
+  "latest_fiscal_year": "PLACEHOLDER -- e.g. 'FY2025', must match a key in income_statement below",
+  "peers": ["PLACEHOLDER", "PLACEHOLDER", "PLACEHOLDER"],
+  "_income_statement_source_hint": "10-K Income Statement / 'Consolidated Statements of Operations'. Use 3 consecutive fiscal years.",
+  "income_statement": {
+    "FY_N_MINUS_2": {"revenue": 0, "ebit": 0, "ebit_margin": 0.0, "net_income": 0},
+    "FY_N_MINUS_1": {"revenue": 0, "ebit": 0, "ebit_margin": 0.0, "net_income": 0},
+    "FY_N": {"revenue": 0, "ebit": 0, "ebit_margin": 0.0, "net_income": 0, "diluted_eps": 0.0}
+  },
+  "_cash_flow_source_hint": "10-K 'Consolidated Statements of Cash Flows'. fcf = cfo + capex (capex is already negative).",
+  "cash_flow": {
+    "FY_N_MINUS_2": {"cfo": 0, "capex": 0, "d_and_a": 0, "fcf": 0},
+    "FY_N_MINUS_1": {"cfo": 0, "capex": 0, "d_and_a": 0, "fcf": 0},
+    "FY_N": {"cfo": 0, "capex": 0, "d_and_a": 0, "fcf": 0}
+  },
+  "_balance_sheet_source_hint": "10-K 'Consolidated Balance Sheets', most recent fiscal year-end only. total_debt = notes_payable + current portion of LT debt + long_term_debt.",
+  "balance_sheet_latest": {
+    "cash_and_equivalents": 0,
+    "short_term_investments": 0,
+    "total_current_assets": 0,
+    "pp_and_e_net": 0,
+    "total_assets": 0,
+    "total_current_liabilities": 0,
+    "long_term_debt": 0,
+    "operating_lease_liabilities": 0,
+    "notes_payable": 0,
+    "total_debt": 0,
+    "deferred_taxes_and_other_liabilities": 0
+  },
+  "_dcf_assumptions_hint": "Write YOUR OWN thesis here -- do not copy another company's growth_path. growth_path is 5 numbers, one YoY growth rate per explicit forecast year.",
+  "dcf_assumptions": {
+    "note": "PLACEHOLDER -- one or two sentences on why this growth path, in plain English",
+    "risk_free_rate": 0.042,
+    "equity_risk_premium": 0.05,
+    "pre_tax_cost_of_debt": 0.05,
+    "tax_rate": 0.22,
+    "terminal_growth": 0.025,
+    "growth_path": [0.0, 0.0, 0.0, 0.0, 0.0]
+  },
+  "_market_data_source_hint": "Any live quote source (stockanalysis.com, Google Finance, your broker). beta is usually '5-year monthly' on most data providers.",
+  "market_data": {
+    "as_of": "PLACEHOLDER -- YYYY-MM-DD",
+    "share_price": 0.0,
+    "market_cap": 0,
+    "diluted_shares_outstanding": 0,
+    "ttm_eps": 0.0,
+    "ttm_pe": 0.0,
+    "52wk_low": 0.0,
+    "52wk_high": 0.0,
+    "beta": 1.0
+  }
+}
